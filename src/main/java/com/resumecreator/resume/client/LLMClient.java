@@ -48,28 +48,24 @@ public class LLMClient {
      * 6. .block() - Wait for response (blocking call)
      */
     public String callLLM(String prompt) {
-        // Build the request body that Gemini API expects
-        Map<String, Object> requestBody = Map.of(
-            "contents", List.of(
-                Map.of(
-                    "parts", List.of(
-                        Map.of("text", prompt)
-                    )
-                )
-            )
-        );
-
+    Map<String, Object> requestBody = Map.of(
+        "contents", List.of(Map.of("parts", List.of(Map.of("text", prompt))))
+    );
         try {
-            String response = webClient.post()
+            Map<String, Object> response = webClient.post()
                     .uri(geminiUrl + "?key=" + apiKey)
                     .header("Content-Type", "application/json")
                     .bodyValue(requestBody)
                     .retrieve()
-                    .bodyToMono(String.class)
+                    .bodyToMono(Map.class)
                     .block();
-                    
-            return response;
-        } catch (Exception e) {
+
+                List<Map> candidates = (List<Map>) response.get("candidates");
+                Map content = (Map) candidates.get(0).get("content");
+                List<Map> parts = (List<Map>) content.get("parts");
+                return (String) parts.get(0).get("text");
+        } 
+        catch (Exception e) {
             return "Error calling LLM: " + e.getMessage();
         }
     }

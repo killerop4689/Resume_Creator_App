@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.resumecreator.resume.model.ResumeRequest;
+import com.resumecreator.resume.model.ResumeResponse;
 import com.resumecreator.resume.service.ResumeService;
 
 
@@ -19,19 +20,18 @@ public class ResumeContoller {
     private ResumeService resumeService;
 
     @GetMapping("/")
-       public String home() {
-       return "Resume Creator API is running. Use POST /resume/generate to create resumes.";
-   }
+    public String home() {
+        return "Resume Creator API is running. Use POST /resume/generate to create resumes.";
+    }
 
     @PostMapping("/generate")
-    public String generateResume(@RequestBody ResumeRequest request){
-        System.out.println("strive in chaos!!");
+    public ResumeResponse generateResume(@RequestBody ResumeRequest request){
         return resumeService.generateResume(request);
     }
     
-    @PostMapping("/validate")
-    public String validateResume(@RequestBody ResumeRequest request){
-        return resumeService.getValidationFeedback(request);
-    }
+    // @PostMapping("/validate")
+    // public QualityReviewResult validateResume(@RequestBody ResumeRequest request){
+    //     return resumeService.getValidationFeedback(request);
+    // }
 
 }

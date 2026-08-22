@@ -6,7 +6,9 @@ public class ResumeRequest {
     private String email;
     private String phone;
     private List<String> skills;
-   // private List<String> experience;
+    private List<String> experience;
+    private List<String> projects;
+    private List<String> education;
 
     // Getters and Setters
     public String getName() {
@@ -41,12 +43,28 @@ public class ResumeRequest {
         this.skills = skills;
     }
 
-    // public List<String> getExperience() {
-    //     return experience;
-    // }
+    public List<String> getExperience() {
+        return experience;
+    }
 
-    // public void setExperience(List<String> experience) {
-    //     this.experience = experience;
-    //}
+    public void setExperience(List<String> experience) {
+        this.experience = experience;
+    }
+
+    public List<String> getProjects(){
+        return projects;
+    }
+
+    public void setProjects(List<String> projects){
+        this.projects = projects;
+    }
+
+    public List<String> getEducation() {
+        return education;
+    }
+
+    public void setEducation(List<String> education) {
+        this.education = education;
+    }
     
 }
