@@ -1,0 +1,78 @@
+# ==========================================
+# Root & IDE Configuration
+# ==========================================
+.vscode/
+.idea/
+*.iws
+*.iml
+*.ipr
+
+# Eclipse / STS
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+# NetBeans
+/nbproject/private/
+/.nb-gradle/
+nbbuild/
+nbdist/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Secrets & Local Config
+.env
+*.env.local
+
+# ==========================================
+# Backend: Spring Boot (resume/)
+# ==========================================
+resume/target/
+resume/build/
+resume/dist/
+resume/.m2-local/
+resume/*.log
+resume/hs_err_pid*
+resume/replay_pid*
+resume/application-local.properties
+
+# Compiled Java files
+*.class
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# Maven Wrapper JAR (uncomment if you don't want to commit the wrapper jar)
+# resume/.mvn/wrapper/maven-wrapper.jar
+
+# H2 Local Persistence Database Files
+resume/data/
+*.db
+*.mv.db
+*.trace.db
+
+# Other Java tools
+*.ctxt
+.mtj.tmp/
+
+# ==========================================
+# Frontend: React (resume-frontend/)
+# ==========================================
+resume-frontend/node_modules/
+resume-frontend/dist/
+resume-frontend/build/
+resume-frontend/.cache/
+resume-frontend/*.log
+resume-frontend/npm-debug.log*
+resume-frontend/yarn-debug.log*
+resume-frontend/yarn-error.log*
