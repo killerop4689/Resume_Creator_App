@@ -5,26 +5,12 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.client.RestClient;
 
-/**
- * LLMClient - Communicates with Google Gemini API
- * 
- * LOGIC:
- * - Uses REST API to call Gemini model
- * - Builds request JSON with the prompt
- * - Handles response parsing and error management
- * 
- * SYNTAX:
- * - WebClient: Spring's non-blocking HTTP client
- * - .post(): HTTP POST request
- * - .bodyValue(): Sends JSON body
- * - .block(): Wait for response (synchronous)
- */
 @Component 
 public class LLMClient {
 
-    private final WebClient webClient;
+    private final RestClient restClient;
     
     @Value("${gemini.api.key}")
     private String apiKey;
@@ -33,41 +19,47 @@ public class LLMClient {
     private String geminiUrl;
 
     public LLMClient() {
-        this.webClient = WebClient.builder().build();
+        this.restClient = RestClient.builder().build();
     }
 
-    /**
-     * Call Gemini API with a prompt
-     * 
-     * SYNTAX BREAKDOWN:
-     * 1. webClient.post() - Start POST request
-     * 2. .uri() - Set the API endpoint with API key
-     * 3. .bodyValue() - Send the request body (prompt wrapped in JSON)
-     * 4. .retrieve() - Execute and get response
-     * 5. .bodyToMono(String.class) - Convert response to single String
-     * 6. .block() - Wait for response (blocking call)
-     */
     public String callLLM(String prompt) {
-    Map<String, Object> requestBody = Map.of(
-        "contents", List.of(Map.of("parts", List.of(Map.of("text", prompt))))
-    );
-        try {
-            Map<String, Object> response = webClient.post()
-                    .uri(geminiUrl + "?key=" + apiKey)
-                    .header("Content-Type", "application/json")
-                    .bodyValue(requestBody)
-                    .retrieve()
-                    .bodyToMono(Map.class)
-                    .block();
+        Map<String, Object> requestBody = Map.of(
+            "contents", List.of(Map.of("parts", List.of(Map.of("text", prompt))))
+        );
+
+        int maxRetries = 3;
+        long backoffMillis = 2000;
+
+        for (int attempt = 1; attempt <= maxRetries; attempt++) {
+            try {
+                Map<String, Object> response = restClient.post()
+                        .uri(geminiUrl + "?key=" + apiKey)
+                        .header("Content-Type", "application/json")
+                        .body(requestBody)
+                        .retrieve()
+                        .body(Map.class);
 
                 List<Map> candidates = (List<Map>) response.get("candidates");
                 Map content = (Map) candidates.get(0).get("content");
                 List<Map> parts = (List<Map>) content.get("parts");
                 return (String) parts.get(0).get("text");
-        } 
-        catch (Exception e) {
-            return "Error calling LLM: " + e.getMessage();
+
+            } catch (Exception e) {
+                System.out.println("✗ LLM call failed on attempt " + attempt + "/" + maxRetries + ": " + e.getMessage());
+
+                if (attempt == maxRetries) {
+                    e.printStackTrace();
+                    return "Error calling LLM: " + e.getMessage();
+                }
+
+                try {
+                    Thread.sleep(backoffMillis);
+                } catch (InterruptedException ignored) {}
+
+                backoffMillis *= 2;
+            }
         }
+
+        return "Error calling LLM: retries exhausted";
     }
 }
-
