@@ -21,22 +21,38 @@ function HistoryList() {
     fetchHistory();
   }, []);
 
-  if (isLoading) return <p>Loading history...</p>;
-  if (errorMsg) return <p className="error">{errorMsg}</p>;
+  if (isLoading) return <div className="card text-center">Loading history...</div>;
+  if (errorMsg) return <div className="error">{errorMsg}</div>;
 
   return (
-    <div>
-      <h2>Resume History</h2>
-      {records.length === 0 && <p>No resumes generated yet.</p>}
-      <ul>
-        {records.map((record) => (
-          <li key={record.id}>
-            <Link to={`/history/${record.id}`}>
-              {record.userName} — Score: {record.overallScore} — {record.createdAt}
-            </Link>
-          </li>
-        ))}
-      </ul>
+    <div className="card history-card animate-fade-in">
+      <h2 className="history-title">Resume History</h2>
+
+      {records.length === 0 ? (
+        <p className="text-center">No resumes generated yet.</p>
+      ) : (
+        <ul className="history-list">
+          {records.map((record, index) => (
+            <li 
+              key={record.id} 
+              className="history-item animate-slide-up"
+              style={{ animationDelay: `${index * 0.05}s` }} // Staggered list animation
+            >
+              <Link to={`/history/${record.id}`} className="history-link">
+                <span className="history-name">{record.userName || "Untitled Resume"}</span>
+                
+                {/* Separated Metadata Container */}
+                <div className="history-meta">
+                  <span className="history-badge">Score: {record.overallScore ?? "N/A"}</span>
+                  <span className="history-date">
+                    {record.createdAt ? new Date(record.createdAt).toLocaleDateString() : ""}
+                  </span>
+                </div>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }

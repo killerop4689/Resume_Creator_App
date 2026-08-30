@@ -31,17 +31,31 @@ function ResumeForm({ onSubmit, isLoading }) {
     onSubmit(payload);
   }
 
+  const firstName = formData.name.trim().split(" ")[0] || "there";
+
+  if (isLoading) {
+    return (
+      <div className="loading-container animate-fade-in">
+        <div className="magic-spinner"></div>
+        <h3>Hey {firstName}! ✨</h3>
+        <p className="loading-subtext">
+          We're crafting a polished, on-point resume for you... get ready to feel the magic! 🚀
+        </p>
+      </div>
+    );
+  }
+
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="animate-fade-in">
       <input name="name" placeholder="Full Name" value={formData.name} onChange={handleChange} required />
       <input name="email" placeholder="Email" value={formData.email} onChange={handleChange} required />
       <input name="phone" placeholder="Phone" value={formData.phone} onChange={handleChange} required />
       <input name="skills" placeholder="Skills (comma-separated)" value={formData.skills} onChange={handleChange} />
-      <textarea name="experience" placeholder="One experience entry per line" value={formData.experience} onChange={handleChange} />
-      <textarea name="projects" placeholder="One project entry per line" value={formData.projects} onChange={handleChange} />
-      <textarea name="education" placeholder="One education entry per line" value={formData.education} onChange={handleChange} />
+      <textarea name="experience" placeholder="One experience entry per line" value={formData.experience} onChange={handleChange} rows={4} />
+      <textarea name="projects" placeholder="One project entry per line" value={formData.projects} onChange={handleChange} rows={4} />
+      <textarea name="education" placeholder="One education entry per line" value={formData.education} onChange={handleChange} rows={3} />
       <button type="submit" disabled={isLoading}>
-        {isLoading ? "Generating..." : "Generate Resume"}
+        Generate Resume
       </button>
     </form>
   );

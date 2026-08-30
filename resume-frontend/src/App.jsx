@@ -11,11 +11,16 @@ function App() {
         <Link to="/history">History</Link>
       </nav>
 
+      <div className="app-container">
+      <nav>
       <Routes>
         <Route path="/" element={<GeneratePage />} />
         <Route path="/history" element={<HistoryList />} />
         <Route path="/history/:id" element={<HistoryDetail />} />
       </Routes>
+      </nav>
+      </div>
+
     </BrowserRouter>
   );
 }

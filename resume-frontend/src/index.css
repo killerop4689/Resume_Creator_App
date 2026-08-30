@@ -1,111 +1,779 @@
+/* ==========================================
+   1. GLOBAL VARIABLES & DARK THEME
+   ========================================== */
 :root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
-
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
-
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
-  color-scheme: light dark;
-  color: var(--text);
-  background: var(--bg);
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-
-  @media (max-width: 1024px) {
-    font-size: 16px;
-  }
+  --primary: #6366f1;
+  --primary-hover: #4f46e5;
+  --primary-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+  --background: #0b0f19;
+  --surface: #151c2c;
+  --surface-border: #26334d;
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --radius-lg: 16px;
+  --radius-md: 8px;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
-  }
-
-  #social .button-icon {
-    filter: invert(1) brightness(2);
-  }
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 body {
-  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background-color: var(--background);
+  color: var(--text-main);
+  line-height: 1.4;
+  -webkit-font-smoothing: antialiased;
 }
 
-#root {
-  width: 1126px;
-  max-width: 100%;
-  margin: 0 auto;
+/* ==========================================
+   2. CONTAINERS & NAVIGATION
+   ========================================== */
+.app-container {
+  max-width: 850px;
+  margin: 24px auto;
+  padding: 0 16px;
+}
+
+nav {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+  padding: 6px;
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--surface-border);
+}
+
+nav a {
+  flex: 1;
   text-align: center;
-  border-inline: 1px solid var(--border);
-  min-height: 100svh;
+  text-decoration: none;
+  color: var(--text-muted);
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+nav a:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+nav a.active {
+  background: var(--primary-gradient);
+  color: white;
+  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.35);
+}
+
+/* ==========================================
+   3. FEATURE 3: CARD & CURSOR SPOTLIGHT EFFECT
+   ========================================== */
+.card {
+  position: relative;
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  margin-bottom: 20px;
+  border: 1px solid var(--surface-border);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+  width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+/* Dynamic Ambient Glow inside Card */
+.card::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.08) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+
+.card:hover::before {
+  opacity: 1;
+}
+
+/* ==========================================
+   4. FEATURE 2: SHIMMER MATCH SCORE BAR
+   ========================================== */
+.match-score-header {
+  margin-bottom: 16px;
+}
+
+.match-score-text {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #a5b4fc;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.match-bar-container {
+  width: 100%;
+  height: 6px;
+  background: #0b0f19;
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid var(--surface-border);
+}
+
+.match-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #6366f1 0%, #ec4899 50%, #10b981 100%);
+  background-size: 200% 100%;
+  animation: shimmer 3s infinite linear;
+  transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes shimmer {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+/* ==========================================
+   5. FEATURE 1: ACTION BAR & COPY BUTTON ANIMATION
+   ========================================== */
+.action-bar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 8px;
+}
+
+.btn-secondary {
+  background: #222f47;
+  color: #e2e8f0;
+  border: 1px solid #334366;
+  padding: 8px 16px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+  background: #2e3e5c;
+  color: #ffffff;
+}
+
+/* Flash pulse green animation on copy */
+.btn-copied {
+  animation: buttonPulse 0.5s ease-out;
+  background: #10b981 !important;
+  color: #ffffff !important;
+  border-color: #059669 !important;
+}
+
+@keyframes buttonPulse {
+  0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+  50% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+  100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+}
+
+/* ==========================================
+   6. RESUME CONTENT & SPACING
+   ========================================== */
+.resume-display {
+  word-wrap: break-word;
+}
+
+.resume-header {
+  text-align: center;
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--surface-border);
+}
+
+.resume-header h1 {
+  font-size: 1.85rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin-bottom: 2px;
+  line-height: 1.1;
+}
+
+.contact-info {
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  margin-top: 2px;
+}
+
+.resume-section {
+  text-align: left;
+  margin-top: 12px;
+}
+
+.summary-section {
+  margin-top: 10px;
+}
+
+.resume-section h2 {
+  text-align: center;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #818cf8;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 6px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid rgba(129, 140, 248, 0.25);
+}
+
+.resume-section p {
+  color: #cbd5e1;
+  font-size: 0.925rem;
+  line-height: 1.5;
+  margin-top: 4px;
+}
+
+.resume-display ul,
+.resume-display ol {
+  padding-left: 20px !important;
+  margin-top: 4px;
+  margin-bottom: 6px;
+}
+
+.resume-display li {
+  margin-bottom: 4px;
+  color: #cbd5e1;
+  font-size: 0.9rem;
+}
+
+.experience-item,
+.project-item {
+  margin-bottom: 10px;
+}
+
+.item-header {
+  color: #f1f5f9;
+  font-size: 0.925rem;
+}
+
+.company {
+  color: #38bdf8;
+}
+
+.period {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.tech-stack {
+  color: #a7f3d0;
+  font-size: 0.85rem;
+}
+
+/* ==========================================
+   7. SKILLS PILLS (HOVER LIFT)
+   ========================================== */
+.skills-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: center;
+  margin-top: 6px;
+}
+
+.skill-pill {
+  background: rgba(99, 102, 241, 0.15);
+  color: #a5b4fc;
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 0.825rem;
+  font-weight: 600;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.skill-pill:hover {
+  background: var(--primary);
+  color: #ffffff;
+  transform: translateY(-2px) scale(1.04);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+}
+
+/* ==========================================
+   8. HISTORY LIST
+   ========================================== */
+.history-card {
+  padding: 28px;
+}
+
+.history-title {
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--surface-border);
+  padding-bottom: 10px;
+}
+
+.history-list {
+  list-style: none !important;
+  padding-left: 0 !important;
+  margin: 0;
   display: flex;
   flex-direction: column;
-  box-sizing: border-box;
+  gap: 10px;
 }
 
-h1,
-h2 {
-  font-family: var(--heading);
-  font-weight: 500;
-  color: var(--text-h);
+.history-item {
+  width: 100%;
 }
 
-h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
+.history-link {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 18px;
+  background-color: #0b0f19;
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  color: var(--text-main);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.history-link:hover {
+  border-color: var(--primary);
+  background-color: #1a233a;
+  transform: translateX(6px);
+  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.2);
+}
+
+.history-name {
+  font-weight: 600;
+  color: var(--text-main);
+  font-size: 0.95rem;
+}
+
+.history-meta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.history-badge {
+  background-color: rgba(99, 102, 241, 0.2);
+  color: #a5b4fc;
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 12px;
+}
+
+.history-date {
+  font-size: 0.825rem;
+  color: var(--text-muted);
+}
+
+/* ==========================================
+   9. FORM INPUTS & BUTTONS
+   ========================================== */
+input, textarea {
+  width: 100%;
+  padding: 10px 14px;
+  margin-bottom: 14px;
+  background: #0b0f19;
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius-md);
+  color: var(--text-main);
+  font-size: 0.925rem;
+  transition: all 0.2s ease;
+}
+
+input:focus, textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25);
+}
+
+button {
+  background: var(--primary-gradient);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: var(--radius-md);
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+}
+
+/* ==========================================
+   10. KEYFRAME ANIMATIONS
+   ========================================== */
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-out forwards;
+}
+
+.animate-slide-up {
+  opacity: 0;
+  animation: slideUp 0.4s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
-h2 {
-  font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
-  margin: 0 0 8px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
-p {
-  margin: 0;
+
+/* ==========================================
+   FANCY MAGIC LOADING SCREEN
+   ========================================== */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  text-align: center;
 }
 
-code,
-.counter {
-  font-family: var(--mono);
-  display: inline-flex;
+.loading-container h3 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-top: 18px;
+  margin-bottom: 8px;
+}
+
+.loading-subtext {
+  color: #a5b4fc;
+  font-size: 0.95rem;
+  max-width: 420px;
+  line-height: 1.5;
+  animation: pulseGlow 2s infinite ease-in-out;
+}
+
+/* Glowing Magic Ring Spinner */
+.magic-spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid rgba(99, 102, 241, 0.15);
+  border-left-color: #6366f1;
+  border-top-color: #a855f7;
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+  box-shadow: 0 0 15px rgba(99, 102, 241, 0.3);
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0.8; }
+  50% { opacity: 1; text-shadow: 0 0 10px rgba(165, 180, 252, 0.4); }
+}
+
+/* ==========================================
+   1. CUSTOM SLEEK SCROLLBAR (All Webkit Browsers)
+   ========================================== */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0b0f19;
   border-radius: 4px;
-  color: var(--text-h);
 }
 
-code {
-  font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
+::-webkit-scrollbar-thumb {
+  background: #26334d;
+  border-radius: 4px;
+  border: 2px solid #0b0f19;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #6366f1;
+}
+
+/* ==========================================
+   2. STYLED TEXTAREA & INPUT ENHANCEMENTS
+   ========================================== */
+input, textarea {
+  width: 100%;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  background: #0b0f19;
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius-md);
+  color: var(--text-main);
+  font-size: 0.925rem;
+  font-family: inherit;
+  resize: vertical; /* Allows resizing vertically without breaking design */
+  line-height: 1.5;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+textarea {
+  min-height: 90px;
+}
+
+input:focus, textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+  background: #111827;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25);
+}
+
+input::placeholder, textarea::placeholder {
+  color: #64748b;
+  font-size: 0.875rem;
+}
+
+/* ==========================================
+   3. PERFECTLY CENTERED LOADING CARD
+   ========================================== */
+.loading-card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 320px;
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  width: 100%;
+  padding: 20px;
+}
+
+.loading-container h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+.loading-subtext {
+  color: #a5b4fc;
+  font-size: 0.95rem;
+  max-width: 440px;
+  line-height: 1.5;
+  animation: pulseGlow 2s infinite ease-in-out;
+}
+
+/* Magic Ring Spinner */
+.magic-spinner {
+  width: 52px;
+  height: 52px;
+  border: 4px solid rgba(99, 102, 241, 0.15);
+  border-left-color: #6366f1;
+  border-top-color: #a855f7;
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+  box-shadow: 0 0 20px rgba(99, 102, 241, 0.35);
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0.85; }
+  50% { opacity: 1; text-shadow: 0 0 12px rgba(165, 180, 252, 0.5); }
+}
+
+/* Force Resume Creator title to center with top/bottom spacing */
+h1, h2, .card h1, .card h2 {
+  text-align: center !important;
+  display: block !important;
+  width: 100% !important;
+  margin-top: 24px !important;
+  margin-bottom: 24px !important;
+}
+
+/* ==========================================
+   FORM TITLE CENTERING & CONTAINER FIX
+   ========================================== */
+.form-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.form-title {
+  text-align: center;
+  width: 100%;
+  margin-top: 8px;
+  margin-bottom: 28px;
+  font-size: 2rem;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.form-card form {
+  width: 100%;
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+/* Center Title & Add Spacing */
+.form-title {
+  text-align: center;
+  width: 100%;
+  margin-top: 8px;
+  margin-bottom: 24px;
+  font-size: 2rem;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+/* Centered Loading State */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  width: 100%;
+  padding: 40px 20px;
+}
+
+.loading-container h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-top: 18px;
+  margin-bottom: 8px;
+}
+
+.loading-subtext {
+  color: #a5b4fc;
+  font-size: 0.95rem;
+  max-width: 440px;
+  line-height: 1.5;
+}
+
+.magic-spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid rgba(99, 102, 241, 0.15);
+  border-left-color: #6366f1;
+  border-top-color: #a855f7;
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+  box-shadow: 0 0 15px rgba(99, 102, 241, 0.3);
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* ==========================================
+   FIX RESUME DISPLAY VERTICAL SPACING
+   ========================================== */
+.resume-display .resume-section {
+  margin-top: 14px !important;
+  margin-bottom: 0px !important;
+}
+
+.resume-display .summary-section {
+  margin-top: 8px !important;
+}
+
+.resume-display h2 {
+  margin-top: 0 !important;
+  margin-bottom: 8px !important;
+  padding-bottom: 4px !important;
+}
+
+.resume-display p {
+  margin-top: 4px !important;
+  margin-bottom: 4px !important;
+  line-height: 1.45 !important;
+}
+
+.resume-display .skills-grid {
+  margin-top: 8px !important;
+}
+
+.resume-display ul, 
+.resume-display ol {
+  margin-top: 6px !important;
+  margin-bottom: 6px !important;
+}
+
+.resume-display li {
+  margin-bottom: 4px !important;
+}
+
+.resume-display .experience-item,
+.resume-display .project-item {
+  margin-bottom: 8px !important;
+}
+
+/* ==========================================
+   FIX HEADER & CONTACT INFO SPACING
+   ========================================== */
+.resume-header {
+  margin-bottom: 8px !important;
+  padding-bottom: 6px !important;
+}
+
+.resume-header h1 {
+  margin-top: 0 !important;
+  margin-bottom: 2px !important; /* Reduces gap under the name */
+  line-height: 1.1 !important;
+}
+
+.resume-header .contact-info {
+  margin-top: 5px !important;  /* Brings email/phone right up under the name */
+  margin-bottom: 0 !important;
+  font-size: 0.85rem !important;
 }

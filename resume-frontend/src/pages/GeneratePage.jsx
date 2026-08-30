@@ -22,13 +22,16 @@ function GeneratePage() {
   }
 
   return (
-    <div>
-      <h1>Resume Creator</h1>
+  <div className="app-container">
+    <div className="card">
+      <h1 className="form-title">Resume Creator</h1>
       <ResumeForm onSubmit={handleGenerate} isLoading={isLoading} />
-      {errorMsg && <div className="error">{errorMsg}</div>}
-      {response && <ResumeDisplay response={response} />}
     </div>
-  );
+
+    {errorMsg && <div className="error">{errorMsg}</div>}
+    {response && <ResumeDisplay response={response} />}
+  </div>
+);
 }
 
 export default GeneratePage;
