@@ -6,13 +6,29 @@ function ResumeForm({ onSubmit, isLoading }) {
     email: "",
     phone: "",
     skills: "",
-    experience: "",
-    projects: "",
-    education: "",
+    experience: [""],
+    projects: [""],
+    education: [""],
   });
 
   function handleChange(e) {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  }
+
+  // Generic handlers reused across experience / projects / education
+  function handleListChange(field, index, value) {
+    const updatedList = [...formData[field]];
+    updatedList[index] = value;
+    setFormData({ ...formData, [field]: updatedList });
+  }
+
+  function addListItem(field) {
+    setFormData({ ...formData, [field]: [...formData[field], ""] });
+  }
+
+  function removeListItem(field, index) {
+    const updatedList = formData[field].filter((_, i) => i !== index);
+    setFormData({ ...formData, [field]: updatedList });
   }
 
   function handleSubmit(e) {
@@ -23,12 +39,45 @@ function ResumeForm({ onSubmit, isLoading }) {
       email: formData.email,
       phone: formData.phone,
       skills: formData.skills.split(",").map(s => s.trim()).filter(Boolean),
-      experience: formData.experience.split("\n").map(s => s.trim()).filter(Boolean),
-      projects: formData.projects.split("\n").map(s => s.trim()).filter(Boolean),
-      education: formData.education.split("\n").map(s => s.trim()).filter(Boolean),
+      experience: formData.experience.map(s => s.trim()).filter(Boolean),
+      projects: formData.projects.map(s => s.trim()).filter(Boolean),
+      education: formData.education.map(s => s.trim()).filter(Boolean),
     };
 
     onSubmit(payload);
+  }
+
+  function renderListSection(field, label, placeholder) {
+    return (
+      <div className="list-section">
+        <label className="list-label">{label}</label>
+        {formData[field].map((value, index) => (
+          <div key={index} className="list-row">
+            <input
+              value={value}
+              placeholder={placeholder}
+              onChange={(e) => handleListChange(field, index, e.target.value)}
+            />
+            {formData[field].length > 1 && (
+              <button
+                type="button"
+                className="btn-secondary btn-remove"
+                onClick={() => removeListItem(field, index)}
+              >
+                Remove
+              </button>
+            )}
+          </div>
+        ))}
+        <button
+          type="button"
+          className="btn-secondary btn-add"
+          onClick={() => addListItem(field)}
+        >
+          + Add {label}
+        </button>
+      </div>
+    );
   }
 
   const firstName = formData.name.trim().split(" ")[0] || "there";
@@ -51,9 +100,11 @@ function ResumeForm({ onSubmit, isLoading }) {
       <input name="email" placeholder="Email" value={formData.email} onChange={handleChange} required />
       <input name="phone" placeholder="Phone" value={formData.phone} onChange={handleChange} required />
       <input name="skills" placeholder="Skills (comma-separated)" value={formData.skills} onChange={handleChange} />
-      <textarea name="experience" placeholder="One experience entry per line" value={formData.experience} onChange={handleChange} rows={4} />
-      <textarea name="projects" placeholder="One project entry per line" value={formData.projects} onChange={handleChange} rows={4} />
-      <textarea name="education" placeholder="One education entry per line" value={formData.education} onChange={handleChange} rows={3} />
+
+      {renderListSection("experience", "Experience", "e.g. Backend Engineer at TechCorp (2022-Present): led migration to microservices...")}
+      {renderListSection("projects", "Projects", "e.g. Resume builder app: Java + Spring AI, multi-agent pipeline...")}
+      {renderListSection("education", "Education", "e.g. B.Tech in CS, ABC Institute, 2018-2022")}
+
       <button type="submit" disabled={isLoading}>
         Generate Resume
       </button>

@@ -1,14 +1,33 @@
 package com.resumecreator.resume.model;
 import java.util.List;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+
 public class ResumeRequest {
+
+    @NotBlank(message = "Name is required")
     private String name;
+
+    @NotBlank(message = "Email is required")
+    @Email(message = "Email must be a valid email address")
     private String email;
+
+    @NotBlank(message = "Phone is required")
     private String phone;
+
+    @NotEmpty(message = "At least one skill is required")
     private List<String> skills;
+
+    
     private List<String> experience;
-    private List<String> projects;
-    private List<String> education;
+
+    @NotEmpty(message = "At least one projects entry is required")
+    private List<String> projects;   
+
+    @NotEmpty(message = "At least one education entry is required")
+    private List<String> education; 
 
     // Getters and Setters
     public String getName() {

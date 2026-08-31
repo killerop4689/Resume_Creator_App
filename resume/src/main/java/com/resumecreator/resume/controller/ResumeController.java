@@ -16,6 +16,8 @@ import com.resumecreator.resume.model.ResumeResponse;
 import com.resumecreator.resume.repository.ResumeRecordRepository;
 import com.resumecreator.resume.service.ResumeService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/resume")  
 public class ResumeController {
@@ -32,7 +34,7 @@ public class ResumeController {
     }
 
     @PostMapping("/generate")
-    public ResumeResponse generateResume(@RequestBody ResumeRequest request){
+    public ResumeResponse generateResume(@Valid @RequestBody ResumeRequest request){
         return resumeService.generateResume(request);
     }
     

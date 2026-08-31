@@ -70,6 +70,22 @@ nav a.active {
   box-shadow: 0 4px 15px rgba(99, 102, 241, 0.35);
 }
 
+h1 {
+  font-family: 'Georgia', serif;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+h1 {
+  background: linear-gradient(135deg, #8b0000 0%, #c62828 45%, #ffd700 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 800;
+}
+
+
+
 /* ==========================================
    3. FEATURE 3: CARD & CURSOR SPOTLIGHT EFFECT
    ========================================== */
@@ -776,4 +792,66 @@ h1, h2, .card h1, .card h2 {
   margin-top: 5px !important;  /* Brings email/phone right up under the name */
   margin-bottom: 0 !important;
   font-size: 0.85rem !important;
+}
+
+/* ==========================================
+   8. DYNAMIC LIST FIELDS (Experience / Projects / Education)
+   ========================================== */
+
+.list-section {
+  padding-bottom: 14px;
+  /* border-bottom: 1px solid transparent; */
+}
+
+.list-label {
+  display: block;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 4px;
+  margin-bottom: 8px;
+}
+
+.list-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.list-row input {
+  flex: 1;
+  margin-bottom: 10px;
+}
+
+.btn-remove {
+  margin-bottom: 10px;
+  white-space: nowrap;
+  padding: 8px 12px;
+  font-size: 0.8rem;
+}
+
+.btn-add {
+  margin-top: 4px;
+  margin-bottom: 8px;
+}
+
+/* button[type="submit"] {
+  margin-top: 20px;
+} */
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+button[type="submit"] {
+  align-self: center;
+  margin-top: 20px;
+}
+
+.list-row input {
+  white-space: normal;
+  word-wrap: break-word;
 }
