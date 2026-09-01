@@ -1,31 +1,19 @@
-const BASE_URL = "http://localhost:8080/resume";
+import API from './api';
 
 export async function generateResume(requestData) {
   try {
-    const response = await fetch(`${BASE_URL}/generate`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(requestData),
-    });
-
-    if (!response.ok) {
-      throw new Error(`Server responded with status ${response.status}`);
-    }
-
-    return await response.json();
+    const response = await API.post('/resume/generate', requestData);
+    return response.data;
   } catch (error) {
     console.error("Error generating resume:", error);
-    throw error; 
+    throw error;
   }
 }
 
 export async function getResumeHistory() {
   try {
-    const response = await fetch(`${BASE_URL}/history`);
-    if (!response.ok) {
-      throw new Error(`Request failed with status ${response.status}`);
-    }
-    return await response.json();
+    const response = await API.get('/resume/history');
+    return response.data;
   } catch (error) {
     console.error("Error fetching resume history:", error);
     throw error;
@@ -33,12 +21,13 @@ export async function getResumeHistory() {
 }
 
 export async function getResumeById(id) {
-  const response = await fetch(`${BASE_URL}/history/${id}`);
-  if (!response.ok) {
-    throw new Error(`Request failed with status ${response.status}`);
+  try {
+    const response = await API.get(`/resume/history/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error(`Error fetching resume #${id}:`, error);
+    throw error;
   }
-  return response.json();
 }
-
 
   
