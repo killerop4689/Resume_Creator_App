@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import ResumeDisplay from "../components/ResumeDisplay";
+import ResumeContent from "../components/ResumeContent";
+import InterviewQuestions from "../components/InterviewQuestions";
 import { getResumeById } from "../api/ResumeApi";
 
 function HistoryDetail() {
@@ -26,8 +27,17 @@ function HistoryDetail() {
 
   if (isLoading) return <p>Loading resume...</p>;
   if (errorMsg) return <p className="error">{errorMsg}</p>;
+  if (!response) return null;
+  if (response.error) return <div className="error">Error: {response.error}</div>;
 
-  return <ResumeDisplay response={response} />;
+  const { resume, interviewQuestions } = response;
+
+  return (
+    <div className="app-container">
+      <ResumeContent resume={resume} />
+      <InterviewQuestions questions={interviewQuestions} />
+    </div>
+  );
 }
 
 export default HistoryDetail;
