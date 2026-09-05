@@ -39,6 +39,7 @@ public class JwtUtil {
             Jwts.parser().verifyWith(key).build().parseSignedClaims(token);
             return true;
         } catch (JwtException | IllegalArgumentException e) {
+            System.out.println(e);
             return false;
         }
     }
