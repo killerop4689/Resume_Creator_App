@@ -18,11 +18,17 @@ function HistoryList() {
         setIsLoading(false);
       }
     }
+
     fetchHistory();
   }, []);
 
-  if (isLoading) return <div className="card text-center">Loading history...</div>;
-  if (errorMsg) return <div className="error">{errorMsg}</div>;
+  if (isLoading) {
+    return <div className="card text-center">Loading history...</div>;
+  }
+
+  if (errorMsg) {
+    return <div className="error">{errorMsg}</div>;
+  }
 
   return (
     <div className="card history-card animate-fade-in">
@@ -33,19 +39,35 @@ function HistoryList() {
       ) : (
         <ul className="history-list">
           {records.map((record, index) => (
-            <li 
-              key={record.id} 
+            <li
+              key={record.id}
               className="history-item animate-slide-up"
-              style={{ animationDelay: `${index * 0.05}s` }} // Staggered list animation
+              style={{ animationDelay: `${index * 0.05}s` }}
             >
-              <Link to={`/history/${record.id}`} className="history-link">
-                <span className="history-name">{record.userName || "Untitled Resume"}</span>
-                
+              <Link
+                to={`/history/${record.id}`}
+                className="history-link"
+              >
+                <span className="history-name">
+                  {record.userName || "Untitled Resume"}
+                </span>
+
                 {/* Separated Metadata Container */}
                 <div className="history-meta">
-                  <span className="history-badge">Score: {record.overallScore ?? "N/A"}</span>
+                  <span className="history-badge">
+                    Score: {record.overallScore ?? "N/A"}
+                  </span>
+
                   <span className="history-date">
-                    {record.createdAt ? new Date(record.createdAt).toLocaleDateString() : ""}
+                    {record.createdAt
+                      ? new Date(record.createdAt).toLocaleString(
+                          undefined,
+                          {
+                            dateStyle: "medium",
+                            timeStyle: "short",
+                          }
+                        )
+                      : "Date unavailable"}
                   </span>
                 </div>
               </Link>

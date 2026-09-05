@@ -3,6 +3,7 @@ package com.resumecreator.resume.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -141,7 +142,8 @@ public class ResumeService {
         try {
             String requestJson = mapper.writeValueAsString(request);
             String responseJson = mapper.writeValueAsString(response);
-            ResumeRecord record = new ResumeRecord(request.getName(), requestJson, responseJson, score);
+            String currentUserName = SecurityContextHolder.getContext().getAuthentication().getName();
+            ResumeRecord record = new ResumeRecord(currentUserName, requestJson, responseJson, score);
             resumeRecordRepository.save(record);
             System.out.println("✓ Step 7: Resume saved to database, id=" + record.getId());
         } catch (Exception e) {

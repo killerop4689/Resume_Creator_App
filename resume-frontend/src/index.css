@@ -84,8 +84,6 @@ h1 {
   font-weight: 800;
 }
 
-
-
 /* ==========================================
    3. FEATURE 3: CARD & CURSOR SPOTLIGHT EFFECT
    ========================================== */
@@ -556,7 +554,7 @@ input, textarea {
   color: var(--text-main);
   font-size: 0.925rem;
   font-family: inherit;
-  resize: vertical; /* Allows resizing vertically without breaking design */
+  resize: vertical;
   line-height: 1.5;
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -759,7 +757,7 @@ h1, h2, .card h1, .card h2 {
   margin-top: 8px !important;
 }
 
-.resume-display ul, 
+.resume-display ul,
 .resume-display ol {
   margin-top: 6px !important;
   margin-bottom: 6px !important;
@@ -784,12 +782,12 @@ h1, h2, .card h1, .card h2 {
 
 .resume-header h1 {
   margin-top: 0 !important;
-  margin-bottom: 2px !important; /* Reduces gap under the name */
+  margin-bottom: 2px !important;
   line-height: 1.1 !important;
 }
 
 .resume-header .contact-info {
-  margin-top: 5px !important;  /* Brings email/phone right up under the name */
+  margin-top: 5px !important;
   margin-bottom: 0 !important;
   font-size: 0.85rem !important;
 }
@@ -820,9 +818,10 @@ h1, h2, .card h1, .card h2 {
   align-items: center;
 }
 
-.list-row input {
+.list-row textarea {
   flex: 1;
   margin-bottom: 10px;
+  min-height: 50px;
 }
 
 .btn-remove {
@@ -851,7 +850,24 @@ button[type="submit"] {
   margin-top: 20px;
 }
 
-.list-row input {
-  white-space: normal;
-  word-wrap: break-word;
+.action-bar {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+@media print {
+  .resume-display, 
+  .resume-display * {
+    color: #000000 !important;
+  }
+  .resume-display h2 {
+    border-bottom-color: #333333 !important;
+  }
+  .skill-pill {
+    background: #f1f5f9 !important;
+    color: #000000 !important;
+    border: 1px solid #ccc !important;
+  }
 }
