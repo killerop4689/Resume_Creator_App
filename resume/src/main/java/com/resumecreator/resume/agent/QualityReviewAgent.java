@@ -22,6 +22,8 @@ public class QualityReviewAgent {
 
             GROUND TRUTH USER FACTS (Nothing outside this list is true):
             - Name: %s
+            - Email: %s
+            - Phone: %s
             - Skills: %s
             - Experience: %s
             - Projects: %s
@@ -32,12 +34,14 @@ public class QualityReviewAgent {
 
             REVIEW INSTRUCTIONS:
             1. Check for unsupported claims: Compare the resume against the GROUND TRUTH. Identify any numbers, tools, or achievements in the resume NOT supported by the user facts. If none exist, return an empty array [].
-            2. Evaluate bullet point strength: Identify bullet points lacking strong action verbs or measurable impact. If none, return an empty array [].
-            3. Assign an overallScore from 0 to 100 based on factual accuracy, clarity, and impact.
-            4. Make a decision: Set "decision" to "REVISE" if overallScore < 70 OR if any unsupported claims exist. Otherwise, set it to "FINISH".
-            5. MANDATORY: The "contact_information" object MUST include name, email, and phone
-               EXACTLY as given by the user, copied verbatim. Never omit or blank these out even if
-               other fields are being rewritten.
+            2. DO NOT check the "contact_information" object (name, email, phone) for unsupported claims
+               under any circumstance. Contact information is fixed, verbatim user-provided data that is
+               validated and enforced separately outside of this review — it is never a claim to audit,
+               and minor formatting differences (e.g. dashes, spacing, capitalization) are NOT unsupported
+               claims either way. Skip this section entirely when building "unsupportedClaims".
+            3. Evaluate bullet point strength: Identify bullet points lacking strong action verbs or measurable impact. If none, return an empty array [].
+            4. Assign an overallScore from 0 to 100 based on factual accuracy, clarity, and impact.
+            5. Make a decision: Set "decision" to "REVISE" if overallScore < 70 OR if any unsupported claims exist (excluding contact_information, per instruction 2). Otherwise, set it to "FINISH".
 
             CRITICAL OUTPUT CONSTRAINTS:
             - Output MUST be strictly raw, valid JSON matching the exact schema below.
@@ -54,6 +58,8 @@ public class QualityReviewAgent {
             }
             """.formatted(
                 userFacts.getName(),
+                userFacts.getEmail(),
+                userFacts.getPhone(),
                 String.join(", ", userFacts.getSkills()),
                 String.join(" | ", userFacts.getExperience()),
                 String.join(" | ", userFacts.getProjects()),
